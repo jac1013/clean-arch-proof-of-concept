@@ -9,7 +9,7 @@ public class PassengerBuilder {
     private Instant dateOfBirth;
     private Gender gender;
     private boolean hasSpecialNeeds;
-    private PassengerType passengerType;
+    private PassengerType passengerType = PassengerType.STANDARD;
 
     public PassengerBuilder setName(String name) {
         this.name = name;

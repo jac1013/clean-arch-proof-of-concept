@@ -3,7 +3,9 @@ package com.airline.main;
 import com.airline.business.airplane.AirplaneFactory;
 import com.airline.business.airplane.AirplaneType;
 import com.airline.business.city.CityFactory;
-import com.airline.business.flight.*;
+import com.airline.business.flight.Flight;
+import com.airline.business.flight.FlightFactory;
+import com.airline.business.flight.FlightType;
 import com.airline.business.passenger.Passenger;
 import com.airline.business.passenger.PassengerBuilder;
 import com.airline.business.passenger.PassengerType;
@@ -34,5 +36,6 @@ public class Main {
         System.out.println(reservation1);
 
         System.out.println(reservation1.getTickerPrice());
+
     }
 }

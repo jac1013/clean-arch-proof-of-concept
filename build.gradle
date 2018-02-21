@@ -1,13 +1,28 @@
 version '1.0-SNAPSHOT'
 
 apply plugin: 'java'
+apply plugin: 'application'
+apply plugin: 'idea'
 
 sourceCompatibility = 1.9
+
+mainClassName = 'com.airline.main.Main'
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
+    // https://mvnrepository.com/artifact/commons-cli/commons-cli
+    compile group: 'commons-cli', name: 'commons-cli', version: '1.4'
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }
+
+//task customFatJar(type: Jar) {
+//    manifest {
+//        attributes 'Main-Class': 'com.airline.view.cli.Main'
+//    }
+//    baseName = 'all-in-one-jar'
+//    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+//    with jar
+//}
