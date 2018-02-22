@@ -16,15 +16,21 @@ import java.util.Optional;
 
 class Controller {
     private String[] CLIArguments;
+    private AirplaneFactory airplaneFactory;
+    private FlightFactory flightFactory;
+    private SeatFactory seatFactory;
 
-    Controller(String[] CLIArguments) {
+    Controller(String[] CLIArguments, AirplaneFactory airplaneFactory, FlightFactory flightFactory, SeatFactory seatFactory) {
         this.CLIArguments = CLIArguments;
+        this.airplaneFactory = airplaneFactory;
+        this.flightFactory = flightFactory;
+        this.seatFactory = seatFactory;
     }
 
     Optional<Reservation> bookFlight() {
-        Optional<PresenterRequest> optionalRequest = new Presenter().parseCommandLine(this.CLIArguments);
+        Optional<PresenterRequest> optionalRequest = new Presenter(CLIArguments).parseCommandLine();
         if(optionalRequest.isPresent()) {
-            return this.constructReservation(optionalRequest.get());
+            return constructReservation(optionalRequest.get());
         }
         return Optional.empty();
     }
@@ -33,8 +39,8 @@ class Controller {
         Optional<PresenterResponse> optionalResponse = new PresenterDataTransformer(request).transform();
         if(optionalResponse.isPresent()) {
             PresenterResponse response = optionalResponse.get();
-            Flight flight = FlightFactory.getFlight(FlightType.INTERNATIONAL, response.getFrom(), response.getTo(), AirplaneFactory.getAirplane("747", null, AirplaneType.LARGE), Instant.now(), Instant.now());
-            Seat seat = SeatFactory.getSeat("A1", response.isFirstClass() ? SeatType.FIRST_CLASS : SeatType.REGULAR, response.getPassenger());
+            Flight flight = flightFactory.create(FlightType.INTERNATIONAL, response.getFrom(), response.getTo(), airplaneFactory.create("747", null, AirplaneType.LARGE), Instant.now(), Instant.now());
+            Seat seat = seatFactory.create("A1", response.isFirstClass() ? SeatType.FIRST_CLASS : SeatType.REGULAR, response.getPassenger());
             return Optional.of(new OnlineReservator().bookFlight(flight, seat, response.getPassenger()));
         }
 

@@ -11,7 +11,7 @@ import java.time.ZoneId;
 import java.util.Optional;
 
 class PresenterDataTransformer {
-    private PresenterRequest request;
+    private final PresenterRequest request;
 
     PresenterDataTransformer(PresenterRequest request) {
         this.request = request;
@@ -19,10 +19,10 @@ class PresenterDataTransformer {
 
     Optional<PresenterResponse> transform() {
         try {
-            Passenger passenger = this.transformPassenger();
-            City departure = this.transformDepartureCity();
-            City arrival = this.transformArrivalCity();
-            return Optional.of(new PresenterResponse(passenger, departure, arrival, this.isFirstClass()));
+            Passenger passenger = transformPassenger();
+            City departure = transformDepartureCity();
+            City arrival = transformArrivalCity();
+            return Optional.of(new PresenterResponse(passenger, departure, arrival, isFirstClass()));
         } catch(NoBirthDateProvidedException exception) {
             System.out.println("Make sure the Birth date is correctly formatted.");
         }
@@ -30,8 +30,8 @@ class PresenterDataTransformer {
     }
 
     private Passenger transformPassenger() throws NoBirthDateProvidedException {
-        return new PassengerBuilder().setName(this.request.getName()).setLastName(this.request.getLastName())
-                .setDateOfBirth(this.getDateOfBirth()).setPassportId(this.request.getPassportId()).build();
+        return new PassengerBuilder().setName(request.getName()).setLastName(request.getLastName())
+                .setDateOfBirth(getDateOfBirth()).setPassportId(request.getPassportId()).build();
     }
 
     private Instant getDateOfBirth() throws NoBirthDateProvidedException {
@@ -46,11 +46,11 @@ class PresenterDataTransformer {
     }
 
     private City transformDepartureCity() {
-        return this.transformCity(this.request.getDepartureCity());
+        return transformCity(request.getDepartureCity());
     }
 
     private City transformArrivalCity() {
-        return this.transformCity(this.request.getArrivalCity());
+        return transformCity(request.getArrivalCity());
     }
 
     private City transformCity(String name) {
@@ -58,7 +58,7 @@ class PresenterDataTransformer {
     }
 
     boolean isFirstClass() {
-        return Boolean.valueOf(this.request.getIsFirstClass());
+        return Boolean.valueOf(request.getIsFirstClass());
     }
 
     private class NoBirthDateProvidedException extends Exception {}

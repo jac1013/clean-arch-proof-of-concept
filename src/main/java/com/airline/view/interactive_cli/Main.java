@@ -1,16 +1,16 @@
 package com.airline.view.interactive_cli;
 
-import com.airline.business.airplane.AirplaneFactory;
+import com.airline.business.airplane.AirplaneFactoryImpl;
 import com.airline.business.airplane.AirplaneType;
 import com.airline.business.city.CityFactory;
 import com.airline.business.flight.Flight;
-import com.airline.business.flight.FlightFactory;
+import com.airline.business.flight.FlightFactoryImpl;
 import com.airline.business.flight.FlightType;
 import com.airline.business.passenger.Passenger;
 import com.airline.business.passenger.PassengerBuilder;
 import com.airline.business.reservation.Reservation;
 import com.airline.business.seat.Seat;
-import com.airline.business.seat.SeatFactory;
+import com.airline.business.seat.SeatFactoryImpl;
 import com.airline.business.seat.SeatType;
 import com.airline.use_case.OnlineReservator;
 
@@ -84,8 +84,8 @@ public class Main {
         Instant instant = date.atStartOfDay(ZoneId.of("UTC")).toInstant();
         Passenger passenger = new PassengerBuilder().setName(name).setLastName(lastName).setDateOfBirth(instant).setPassportId(passportId).build();
 
-        Flight flight = FlightFactory.getFlight(FlightType.INTERNATIONAL, CityFactory.getCity(from), CityFactory.getCity(to), AirplaneFactory.getAirplane("747", null, AirplaneType.LARGE), Instant.now(), Instant.now());
-        Seat seat = SeatFactory.getSeat("A1", isFirstClass ? SeatType.FIRST_CLASS : SeatType.REGULAR, passenger);
+        Flight flight = new FlightFactoryImpl().create(FlightType.INTERNATIONAL, CityFactory.getCity(from), CityFactory.getCity(to), new AirplaneFactoryImpl().create("747", null, AirplaneType.LARGE), Instant.now(), Instant.now());
+        Seat seat = new SeatFactoryImpl().create("A1", isFirstClass ? SeatType.FIRST_CLASS : SeatType.REGULAR, passenger);
         return new OnlineReservator().bookFlight(flight, seat, passenger);
     }
 

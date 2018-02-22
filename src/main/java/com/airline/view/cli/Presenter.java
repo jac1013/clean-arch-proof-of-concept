@@ -22,32 +22,36 @@ class Presenter {
     private static final String FIRST_CLASS_LONG = "seat-first-class";
     private static final String FIRST_CLASS_SHORT = "sf";
     private static final String CLI_NAME = "airline-booker";
+    private final String[] arguments;
 
-    Optional<PresenterRequest> parseCommandLine(String[] arguments) {
-        if (this.shouldPrintHelp(arguments)) {
-            this.printHelp();
+    Presenter(String[] arguments) {
+        this.arguments = arguments;
+    }
+
+    Optional<PresenterRequest> parseCommandLine() {
+        if (shouldPrintHelp()) {
+            printHelp();
         } else {
-            return Optional.of(this.parseCommandLineArguments(arguments));
+            return Optional.of(parseCommandLineArguments());
         }
 
         return Optional.empty();
     }
 
-    private boolean shouldPrintHelp(String[] arguments) {
+    private boolean shouldPrintHelp() {
         return arguments.length == 0;
     }
 
     private void printHelp() {
         HelpFormatter formatter = new HelpFormatter();
-        formatter.printHelp(CLI_NAME, this.createCLIOptions());
+        formatter.printHelp(CLI_NAME, createCLIOptions());
     }
 
-    private PresenterRequest parseCommandLineArguments(String[] arguments) {
+    private PresenterRequest parseCommandLineArguments() {
         PresenterRequest request = null;
         try {
-
             CommandLineParser parser = new DefaultParser();
-            CommandLine line = parser.parse(this.createCLIOptions(), arguments);
+            CommandLine line = parser.parse(createCLIOptions(), arguments);
             request = new PresenterRequest.CLIPresenterRequestBuilder(line.getOptionValue(NAME_LONG), line.getOptionValue(LAST_NAME_LONG), line.getOptionValue(PASSPORT_ID_LONG))
                     .dateOfBirth(line.getOptionValue(DATE_OF_BIRTH_LONG))
                     .isFirstClass(line.getOptionValue(FIRST_CLASS_LONG))
