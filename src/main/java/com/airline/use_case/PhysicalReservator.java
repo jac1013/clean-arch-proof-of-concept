@@ -10,7 +10,7 @@ import com.airline.business.util.TimeHelper;
 
 public class PhysicalReservator implements AirlineReservator {
     @Override
-    public Reservation bookFlight(Flight flight, Seat seat, Passenger passenger) {
-        return ReservationFactory.getReservation(flight, seat, passenger, TimeHelper.getTimeAfterHours(72), ReservationType.PHYSICAL);
+    public Reservation bookFlight(Flight flight, Seat seat, Passenger passenger, ReservationFactory reservationFactory) {
+        return reservationFactory.create(flight, seat, passenger, TimeHelper.getTimeAfterHours(72), ReservationType.PHYSICAL);
     }
 }

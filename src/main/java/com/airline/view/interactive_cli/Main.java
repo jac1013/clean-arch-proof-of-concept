@@ -2,12 +2,13 @@ package com.airline.view.interactive_cli;
 
 import com.airline.business.airplane.AirplaneFactoryImpl;
 import com.airline.business.airplane.AirplaneType;
-import com.airline.business.city.CityFactory;
+import com.airline.business.city.CityFactoryImpl;
 import com.airline.business.flight.Flight;
 import com.airline.business.flight.FlightFactoryImpl;
 import com.airline.business.flight.FlightType;
 import com.airline.business.passenger.Passenger;
 import com.airline.business.reservation.Reservation;
+import com.airline.business.reservation.ReservationFactoryImpl;
 import com.airline.business.seat.Seat;
 import com.airline.business.seat.SeatFactoryImpl;
 import com.airline.business.seat.SeatType;
@@ -84,9 +85,9 @@ public class Main {
         Passenger passenger = new Passenger.PassengerBuilder(name, lastName, passportId)
                 .dateOfBirth(instant).build();
 
-        Flight flight = new FlightFactoryImpl().create(FlightType.INTERNATIONAL, CityFactory.getCity(from), CityFactory.getCity(to), new AirplaneFactoryImpl().create("747", null, AirplaneType.LARGE), Instant.now(), Instant.now());
+        Flight flight = new FlightFactoryImpl().create(FlightType.INTERNATIONAL, new CityFactoryImpl().create(from), new CityFactoryImpl().create(to), new AirplaneFactoryImpl().create("747", null, AirplaneType.LARGE), Instant.now(), Instant.now());
         Seat seat = new SeatFactoryImpl().create("A1", isFirstClass ? SeatType.FIRST_CLASS : SeatType.REGULAR, passenger);
-        return new OnlineReservator().bookFlight(flight, seat, passenger);
+        return new OnlineReservator().bookFlight(flight, seat, passenger, new ReservationFactoryImpl());
     }
 
     private static void feedbackUserWithReservation(Reservation reservation) {

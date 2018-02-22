@@ -11,9 +11,11 @@ import java.util.Optional;
 
 class PresenterDataTransformer {
     private final PresenterRequest request;
+    private CityFactory cityFactory;
 
-    PresenterDataTransformer(PresenterRequest request) {
+    PresenterDataTransformer(PresenterRequest request, CityFactory cityFactory) {
         this.request = request;
+        this.cityFactory = cityFactory;
     }
 
     Optional<PresenterResponse> transform() {
@@ -53,7 +55,7 @@ class PresenterDataTransformer {
     }
 
     private City transformCity(String name) {
-        return CityFactory.getCity(name);
+        return cityFactory.create(name);
     }
 
     boolean isFirstClass() {
