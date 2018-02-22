@@ -4,7 +4,6 @@ import org.apache.commons.cli.*;
 
 import java.util.Optional;
 
-
 class Presenter {
 
     private static final String NAME_LONG = "name";

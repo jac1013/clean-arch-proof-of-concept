@@ -3,6 +3,7 @@ package com.airline.view.cli;
 import com.airline.business.city.City;
 import com.airline.business.city.CityFactory;
 import com.airline.business.passenger.Passenger;
+import com.airline.reservation.controller.PresenterResponse;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -23,7 +24,7 @@ class PresenterDataTransformer {
             Passenger passenger = transformPassenger();
             City departure = transformDepartureCity();
             City arrival = transformArrivalCity();
-            return Optional.of(new PresenterResponse(passenger, departure, arrival, isFirstClass()));
+            return Optional.of(new CLIPresenterResponse(passenger, departure, arrival, isFirstClass()));
         } catch(NoBirthDateProvidedException exception) {
             System.out.println("Make sure the Birth date is correctly formatted.");
         }
