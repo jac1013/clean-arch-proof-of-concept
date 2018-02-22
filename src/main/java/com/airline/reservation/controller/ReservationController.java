@@ -33,7 +33,13 @@ public class ReservationController {
         this.reservationFactory = reservationFactory;
     }
 
-    // This is smelly, It seems to me that the code for creating the flight and the seat should be in the use case, the controller should only be a bridge.
+    /*
+    I changed my mind, this isn't necessarily smelly code is just that I'm not passing the Flight and Seat information
+    Through this view (for simplicity purpose), in a real case we would receive the Flight and probably the Seat,
+    The latter can be randomly assigned according to the Passenger (It's eligible for Emergency Sit? It's an elder
+    and requires a wheel chair? It's first class? It's first class and also needs a wheel chair?), This decision
+    should be made in the use case itself and not here in the controller.
+     */
     public Optional<Reservation> bookFlight() {
         Flight flight = flightFactory.create(FlightType.INTERNATIONAL, response.getFrom(), response.getTo(), airplaneFactory.create("747", null, AirplaneType.LARGE), Instant.now(), Instant.now());
         Seat seat = seatFactory.create("A1", response.isFirstClass() ? SeatType.FIRST_CLASS : SeatType.REGULAR, response.getPassenger());
