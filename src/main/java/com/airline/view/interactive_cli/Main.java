@@ -19,6 +19,8 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Scanner;
 
+// A lot of everything that is in this main should be in it's own class,
+// I'm too lazy right now for refactor, this is just a proof of concept for the plugin architecture.
 public class Main {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
@@ -77,7 +79,6 @@ public class Main {
         return sc.nextLine();
     }
 
-    // A lot of everything that is in this main should be in it's own class, I'm too lazy right now for refactor, this is just a proof of concept for my own.
     private static Reservation businessLogic(String name, String lastName, String passportId, String dateOfBirth, boolean isFirstClass, String from, String to) {
         LocalDate date = LocalDate.parse(dateOfBirth);
         Instant instant = date.atStartOfDay(ZoneId.of("UTC")).toInstant();
@@ -96,10 +97,10 @@ public class Main {
     }
 
     private static void tryToLoopOrGoodbye(Scanner sc) {
-        System.out.print("Another Passenger (Y/N) : ");  // ask the input from user
+        System.out.print("Another Passenger (Y/N) : ");
         String var= sc.nextLine();
-        if(var.equalsIgnoreCase("Y")){// Matches "Y" or "y"
-            main(null); // if input is Y then call main again.
+        if(var.equalsIgnoreCase("Y")){
+            main(null);
         } else {
             System.out.println("Bon voyage!");
         }
