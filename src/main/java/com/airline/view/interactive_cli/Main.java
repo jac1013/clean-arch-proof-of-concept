@@ -9,10 +9,11 @@ import com.airline.business.flight.FlightType;
 import com.airline.business.passenger.Passenger;
 import com.airline.business.reservation.Reservation;
 import com.airline.business.reservation.ReservationFactoryImpl;
+import com.airline.business.reservation.ReservationType;
 import com.airline.business.seat.Seat;
 import com.airline.business.seat.SeatFactoryImpl;
 import com.airline.business.seat.SeatType;
-import com.airline.use_case.OnlineReservator;
+import com.airline.use_case.AirlineReservatorImpl;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -87,7 +88,7 @@ public class Main {
 
         Flight flight = new FlightFactoryImpl().create(FlightType.INTERNATIONAL, new CityFactoryImpl().create(from), new CityFactoryImpl().create(to), new AirplaneFactoryImpl().create("747", null, AirplaneType.LARGE), Instant.now(), Instant.now());
         Seat seat = new SeatFactoryImpl().create("A1", isFirstClass ? SeatType.FIRST_CLASS : SeatType.REGULAR, passenger);
-        return new OnlineReservator().bookFlight(flight, seat, passenger, new ReservationFactoryImpl());
+        return new AirlineReservatorImpl().bookFlight(flight, seat, passenger, ReservationType.ONLINE, new ReservationFactoryImpl());
     }
 
     private static void feedbackUserWithReservation(Reservation reservation) {

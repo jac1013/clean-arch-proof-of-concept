@@ -1,14 +1,10 @@
 package com.airline.view.cli;
 
-import com.airline.business.airplane.AirplaneFactoryImpl;
 import com.airline.business.city.CityFactoryImpl;
-import com.airline.business.flight.FlightFactoryImpl;
 import com.airline.business.reservation.Reservation;
-import com.airline.business.reservation.ReservationFactoryImpl;
-import com.airline.business.seat.SeatFactoryImpl;
 import com.airline.reservation.controller.PresenterResponse;
 import com.airline.reservation.controller.ReservationController;
-import com.airline.use_case.OnlineReservator;
+import com.airline.use_case.AirlineReservatorFactoryImpl;
 
 import java.util.Optional;
 
@@ -20,8 +16,9 @@ public class Main {
             return;
         }
 
-        Optional<PresenterResponse> response = new PresenterDataTransformer(request.get(), new CityFactoryImpl()).transform();
-        if(!response.isPresent()) {
+        Optional<PresenterResponse> response = new PresenterDataTransformer(request.get(),
+                new CityFactoryImpl()).transform();
+        if (!response.isPresent()) {
             return;
         }
 
@@ -30,7 +27,9 @@ public class Main {
     }
 
     private static void createReservation(PresenterResponse response) {
-        Optional<Reservation> reservation = new ReservationController(response, new AirplaneFactoryImpl(), new FlightFactoryImpl(), new SeatFactoryImpl(), new ReservationFactoryImpl(), new OnlineReservator()).bookFlight();
+        Optional<Reservation> reservation = new ReservationController(response, new AirlineReservatorFactoryImpl()
+                .create())
+                .bookFlight();
         reservation.ifPresent(r -> {
             System.out.println(r);
             System.out.println(r.getTickerPrice());

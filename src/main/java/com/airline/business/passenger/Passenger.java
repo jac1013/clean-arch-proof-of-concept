@@ -9,6 +9,11 @@ public abstract class Passenger {
     Instant dateOfBirth;
     Gender gender;
     boolean needsSpecialTreatment;
+    PassengerType passengerType;
+
+    public boolean isVIP() {
+        return passengerType == PassengerType.VIP;
+    }
 
     @Override
     public String toString() {
