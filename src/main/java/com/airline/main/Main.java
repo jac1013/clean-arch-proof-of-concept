@@ -7,7 +7,6 @@ import com.airline.business.flight.Flight;
 import com.airline.business.flight.FlightFactoryImpl;
 import com.airline.business.flight.FlightType;
 import com.airline.business.passenger.Passenger;
-import com.airline.business.passenger.PassengerBuilder;
 import com.airline.business.passenger.PassengerType;
 import com.airline.business.reservation.Reservation;
 import com.airline.business.seat.Seat;
@@ -21,7 +20,7 @@ import java.time.Instant;
 public class Main {
 
     public static void main(String[] args) {
-        Passenger passenger = new PassengerBuilder().setName("John").setLastName("Doe").setDateOfBirth(Instant.now()).setPassportId("12345678").setType(PassengerType.STANDARD).build();
+        Passenger passenger = new Passenger.PassengerBuilder("John", "Doe", "12345678").dateOfBirth(Instant.now()).type(PassengerType.STANDARD).build();
         Seat seat =  new SeatFactoryImpl().create("A1", SeatType.FIRST_CLASS, passenger);
         Flight flight = new FlightFactoryImpl().create(FlightType.INTERNATIONAL, CityFactory.getCity("New York"), CityFactory.getCity("Tokyo"), new AirplaneFactoryImpl().create("747", null, AirplaneType.LARGE), Instant.now(), Instant.now());
 

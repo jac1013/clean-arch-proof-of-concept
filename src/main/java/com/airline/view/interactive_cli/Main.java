@@ -7,7 +7,6 @@ import com.airline.business.flight.Flight;
 import com.airline.business.flight.FlightFactoryImpl;
 import com.airline.business.flight.FlightType;
 import com.airline.business.passenger.Passenger;
-import com.airline.business.passenger.PassengerBuilder;
 import com.airline.business.reservation.Reservation;
 import com.airline.business.seat.Seat;
 import com.airline.business.seat.SeatFactoryImpl;
@@ -82,7 +81,8 @@ public class Main {
     private static Reservation businessLogic(String name, String lastName, String passportId, String dateOfBirth, boolean isFirstClass, String from, String to) {
         LocalDate date = LocalDate.parse(dateOfBirth);
         Instant instant = date.atStartOfDay(ZoneId.of("UTC")).toInstant();
-        Passenger passenger = new PassengerBuilder().setName(name).setLastName(lastName).setDateOfBirth(instant).setPassportId(passportId).build();
+        Passenger passenger = new Passenger.PassengerBuilder(name, lastName, passportId)
+                .dateOfBirth(instant).build();
 
         Flight flight = new FlightFactoryImpl().create(FlightType.INTERNATIONAL, CityFactory.getCity(from), CityFactory.getCity(to), new AirplaneFactoryImpl().create("747", null, AirplaneType.LARGE), Instant.now(), Instant.now());
         Seat seat = new SeatFactoryImpl().create("A1", isFirstClass ? SeatType.FIRST_CLASS : SeatType.REGULAR, passenger);

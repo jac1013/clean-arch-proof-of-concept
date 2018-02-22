@@ -3,7 +3,6 @@ package com.airline.view.cli;
 import com.airline.business.city.City;
 import com.airline.business.city.CityFactory;
 import com.airline.business.passenger.Passenger;
-import com.airline.business.passenger.PassengerBuilder;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -30,8 +29,8 @@ class PresenterDataTransformer {
     }
 
     private Passenger transformPassenger() throws NoBirthDateProvidedException {
-        return new PassengerBuilder().setName(request.getName()).setLastName(request.getLastName())
-                .setDateOfBirth(getDateOfBirth()).setPassportId(request.getPassportId()).build();
+        return new Passenger.PassengerBuilder(request.getName(), request.getLastName(), request.getPassportId())
+                .dateOfBirth(getDateOfBirth()).build();
     }
 
     private Instant getDateOfBirth() throws NoBirthDateProvidedException {
