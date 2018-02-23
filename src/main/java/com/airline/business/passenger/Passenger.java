@@ -1,10 +1,11 @@
 package com.airline.business.passenger;
 
+import com.airline.business.database.BusinessDatabase;
 import com.airline.business.database.Database;
 
 import java.time.Instant;
 
-public abstract class Passenger {
+public abstract class Passenger implements BusinessDatabase<Passenger> {
     String name;
     String lastName;
     String passportId;
@@ -12,7 +13,7 @@ public abstract class Passenger {
     Gender gender;
     boolean needsSpecialTreatment;
     PassengerType passengerType;
-    Database database;
+    Database<Passenger> database;
 
     public boolean isVIP() {
         return passengerType == PassengerType.VIP;
@@ -66,7 +67,7 @@ public abstract class Passenger {
         Gender gender;
         boolean needsSpecialTreatment;
         PassengerType passengerType = PassengerType.STANDARD;
-        Database database;
+        Database<Passenger> database;
 
         public PassengerBuilder(String name, String lastName, String passportId) {
             this.name = name;

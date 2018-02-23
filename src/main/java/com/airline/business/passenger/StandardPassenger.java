@@ -11,4 +11,24 @@ class StandardPassenger extends Passenger {
         this.passengerType = builder.passengerType;
         this.database = builder.database;
     }
+
+    @Override
+    public Passenger save() {
+        return this.database.save(this);
+    }
+
+    @Override
+    public Passenger update() {
+        return this.database.update(this);
+    }
+
+    @Override
+    public boolean delete(String id) {
+        return this.database.delete(id);
+    }
+
+    @Override
+    public Passenger find(String id) {
+        return this.database.find(id);
+    }
 }
