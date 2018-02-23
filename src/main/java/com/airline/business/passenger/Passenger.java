@@ -1,5 +1,7 @@
 package com.airline.business.passenger;
 
+import com.airline.business.database.Database;
+
 import java.time.Instant;
 
 public abstract class Passenger {
@@ -10,9 +12,38 @@ public abstract class Passenger {
     Gender gender;
     boolean needsSpecialTreatment;
     PassengerType passengerType;
+    Database database;
 
     public boolean isVIP() {
         return passengerType == PassengerType.VIP;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public String getPassportId() {
+        return passportId;
+    }
+
+    public Instant getDateOfBirth() {
+        return dateOfBirth;
+    }
+
+    public Gender getGender() {
+        return gender;
+    }
+
+    public boolean isNeedsSpecialTreatment() {
+        return needsSpecialTreatment;
+    }
+
+    public PassengerType getPassengerType() {
+        return passengerType;
     }
 
     @Override
@@ -35,6 +66,7 @@ public abstract class Passenger {
         Gender gender;
         boolean needsSpecialTreatment;
         PassengerType passengerType = PassengerType.STANDARD;
+        Database database;
 
         public PassengerBuilder(String name, String lastName, String passportId) {
             this.name = name;
@@ -59,6 +91,11 @@ public abstract class Passenger {
 
         public PassengerBuilder type(PassengerType passengerType) {
             this.passengerType = passengerType;
+            return this;
+        }
+
+        public PassengerBuilder database(Database database) {
+            this.database = database;
             return this;
         }
 

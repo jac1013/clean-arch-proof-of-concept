@@ -15,6 +15,14 @@ public abstract class Flight {
     City to;
     FlightCostCalculator costCalculator;
 
+    public City getFrom() {
+        return from;
+    }
+
+    public City getTo() {
+        return to;
+    }
+
     public double getCost() {
         return this.costCalculator.calculate() * this.from.getCostFactor() * this.to.getCostFactor() * this.airplane.getCostFactor();
     }

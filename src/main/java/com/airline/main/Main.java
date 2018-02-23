@@ -6,36 +6,55 @@ import com.airline.business.city.CityFactoryImpl;
 import com.airline.business.flight.Flight;
 import com.airline.business.flight.FlightFactoryImpl;
 import com.airline.business.flight.FlightType;
+import com.airline.business.passenger.Gender;
 import com.airline.business.passenger.Passenger;
 import com.airline.business.passenger.PassengerType;
 import com.airline.business.reservation.Reservation;
-import com.airline.business.reservation.ReservationFactoryImpl;
-import com.airline.business.reservation.ReservationType;
 import com.airline.business.seat.Seat;
 import com.airline.business.seat.SeatFactoryImpl;
 import com.airline.business.seat.SeatType;
-import com.airline.use_case.AirlineReservatorImpl;
+import com.airline.database.PassengerPersistor;
+import com.airline.database.PassengerRepository;
+import com.airline.use_case.AirlineReservatorFactoryImpl;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
 
 import java.time.Instant;
 
+@SpringBootApplication
 public class Main {
 
+
     public static void main(String[] args) {
-        Passenger passenger = new Passenger.PassengerBuilder("John", "Doe", "12345678").dateOfBirth(Instant.now()).type(PassengerType.STANDARD).build();
-        Seat seat =  new SeatFactoryImpl().create("A1", SeatType.FIRST_CLASS, passenger);
-        Flight flight = new FlightFactoryImpl().create(FlightType.INTERNATIONAL, new CityFactoryImpl().create("New York"), new CityFactoryImpl().create("Tokyo"), new AirplaneFactoryImpl().create("747", null, AirplaneType.LARGE), Instant.now(), Instant.now());
+        SpringApplication.run(Main.class, args);
+    }
 
-        Reservation reservation = new AirlineReservatorImpl().bookFlight(flight, seat, passenger,ReservationType.ONLINE, new ReservationFactoryImpl());
+    @Bean
+    public CommandLineRunner demo(PassengerRepository repository) {
+        return (args) -> {
+            Passenger passenger = new Passenger.PassengerBuilder("John", "Doe", "12345678").dateOfBirth(Instant
+                    .now()).gender(Gender.FEMININE).type(PassengerType.STANDARD).build();
+            Seat seat =  new SeatFactoryImpl().create("A1", SeatType.FIRST_CLASS, passenger);
+            Flight flight = new FlightFactoryImpl().create(FlightType.INTERNATIONAL, new CityFactoryImpl().create("New York"), new CityFactoryImpl().create("Tokyo"), new AirplaneFactoryImpl().create("747", null, AirplaneType.LARGE), Instant.now(), Instant.now());
 
-        System.out.println(reservation);
+            Reservation reservation = new AirlineReservatorFactoryImpl().create().bookFlight(flight, seat, passenger,
+                    flight.getFrom(), flight.getTo());
 
-        System.out.println(reservation.getTickerPrice());
+            System.out.println(reservation);
 
-        Reservation reservation1 = new AirlineReservatorImpl().bookFlight(flight, seat, passenger, ReservationType.ONLINE, new ReservationFactoryImpl());
+            System.out.println(reservation.getTickerPrice());
 
-        System.out.println(reservation1);
+            Reservation reservation1 = new AirlineReservatorFactoryImpl().create().bookFlight(flight, seat, passenger,
+                    flight.getFrom(), flight.getTo());
 
-        System.out.println(reservation1.getTickerPrice());
+            System.out.println(reservation1);
 
+            System.out.println(reservation1.getTickerPrice());
+
+            System.out.println(new PassengerPersistor(repository).save(passenger));
+
+        };
     }
 }

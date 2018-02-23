@@ -1,8 +1,18 @@
 version '1.0-SNAPSHOT'
 
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.5.10.RELEASE")
+    }
+}
+
 apply plugin: 'java'
 apply plugin: 'application'
 apply plugin: 'idea'
+apply plugin: 'org.springframework.boot'
 
 sourceCompatibility = 1.9
 
@@ -10,19 +20,22 @@ mainClassName = 'com.airline.main.Main'
 
 repositories {
     mavenCentral()
+    maven { url "https://repository.jboss.org/nexus/content/repositories/releases" }
 }
 
 dependencies {
     // https://mvnrepository.com/artifact/commons-cli/commons-cli
     compile group: 'commons-cli', name: 'commons-cli', version: '1.4'
+    // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-data-jpa
+    compile("org.springframework.boot:spring-boot-starter-data-jpa")
+
+    compile "javax.xml.bind:jaxb-api:2.3.0"
+    compile "com.sun.xml.bind:jaxb-impl:2.3.0"
+    compile "org.glassfish.jaxb:jaxb-runtime:2.3.0"
+    compile "javax.activation:activation:1.1.1"
+
+
+    compile 'org.postgresql:postgresql:42.2.1.jre7'
+
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }
-
-//task customFatJar(type: Jar) {
-//    manifest {
-//        attributes 'Main-Class': 'com.airline.view.cli.Main'
-//    }
-//    baseName = 'all-in-one-jar'
-//    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
-//    with jar
-//}

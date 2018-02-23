@@ -9,5 +9,6 @@ class StandardPassenger extends Passenger {
         this.gender = builder.gender;
         this.needsSpecialTreatment = builder.needsSpecialTreatment;
         this.passengerType = builder.passengerType;
+        this.database = builder.database;
     }
 }
