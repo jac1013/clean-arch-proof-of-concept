@@ -1,6 +1,6 @@
 package com.airline.view.cli;
 
-class PresenterRequest {
+public class PresenterRequest {
     private final String name;
     private final String lastName;
     private final String dateOfBirth;
@@ -9,7 +9,7 @@ class PresenterRequest {
     private final String arrivalCity;
     private final String isFirstClass;
 
-    private PresenterRequest(CLIPresenterRequestBuilder builder) {
+    private PresenterRequest(PresenterRequestBuilder builder) {
         this.name = builder.name;
         this.lastName = builder.lastName;
         this.dateOfBirth = builder.dateOfBirth;
@@ -47,7 +47,7 @@ class PresenterRequest {
         return isFirstClass;
     }
 
-    static class CLIPresenterRequestBuilder {
+    public static class PresenterRequestBuilder {
         private final String name;
         private final String lastName;
         private String dateOfBirth;
@@ -56,33 +56,33 @@ class PresenterRequest {
         private String arrivalCity;
         private String isFirstClass;
 
-        CLIPresenterRequestBuilder(String name, String lastName, String passportId) {
+        public PresenterRequestBuilder(String name, String lastName, String passportId) {
             this.name = name;
             this.lastName = lastName;
             this.passportId = passportId;
         }
 
-        CLIPresenterRequestBuilder dateOfBirth(String dateOfBirth) {
+        public PresenterRequestBuilder dateOfBirth(String dateOfBirth) {
             this.dateOfBirth = dateOfBirth;
             return this;
         }
 
-        CLIPresenterRequestBuilder departureCity(String departureCity) {
+        public PresenterRequestBuilder departureCity(String departureCity) {
             this.departureCity = departureCity;
             return this;
         }
 
-        CLIPresenterRequestBuilder arrivalCity(String arrivalCity) {
+        public PresenterRequestBuilder arrivalCity(String arrivalCity) {
             this.arrivalCity = arrivalCity;
             return this;
         }
 
-        CLIPresenterRequestBuilder isFirstClass(String isFirstClass) {
+        public PresenterRequestBuilder isFirstClass(String isFirstClass) {
             this.isFirstClass = isFirstClass;
             return this;
         }
 
-        PresenterRequest build() {
+        public PresenterRequest build() {
             return new PresenterRequest(this);
         }
     }

@@ -6,107 +6,69 @@ import com.airline.business.city.CityFactoryImpl;
 import com.airline.business.flight.Flight;
 import com.airline.business.flight.FlightFactoryImpl;
 import com.airline.business.flight.FlightType;
-import com.airline.business.passenger.Passenger;
+import com.airline.business.passenger.*;
 import com.airline.business.reservation.Reservation;
-import com.airline.business.reservation.ReservationFactoryImpl;
-import com.airline.business.reservation.ReservationType;
 import com.airline.business.seat.Seat;
 import com.airline.business.seat.SeatFactoryImpl;
 import com.airline.business.seat.SeatType;
+import com.airline.database.spring.DatabaseFactoryImpl;
+import com.airline.main.SpringConfig;
+import com.airline.reservation.controller.PresenterResponse;
+import com.airline.reservation.controller.ReservationController;
 import com.airline.use_case.AirlineReservatorFactoryImpl;
-import com.airline.use_case.AirlineReservatorImpl;
+import com.airline.view.cli.PresenterDataTransformer;
+import com.airline.view.cli.PresenterRequest;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Import;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 import java.time.Instant;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.Scanner;
+import java.util.Optional;
 
-// A lot of everything that is in this main should be in it's own class,
-// I'm too lazy right now for refactor, this is just a proof of concept for the plugin architecture.
+@SpringBootApplication
+@Import({SpringConfig.class})
+@ComponentScan("com.airline.database")
+@EntityScan("com.airline.database")
+@EnableJpaRepositories("com.airline.database")
 public class Main {
+
+    @Autowired
+    static DatabaseFactoryImpl databaseFactory;
+
     public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        greet();
+        initializeSpring(args);
 
-        String name = askForName(sc);
-        String lastName = askForLastName(sc);
-        String dateOfBirth = askForDateOfBirth(sc);
-        String passportId = askForPassportId(sc);
-        boolean isFirstClass = askForFirstClass(sc);
-        String from = askDepartureCity(sc);
-        String to = askForArrivalCity(sc);
+        View view = new View();
+        PresenterRequest request = view.askForInformation();
+        Optional<PresenterResponse> response = new PresenterDataTransformer(request, new CityFactoryImpl(), new
+                PassengerFactoryImpl(databaseFactory.getPassengerDatabase())).transform();
 
-        Reservation reservation = businessLogic(name, lastName, passportId, dateOfBirth, isFirstClass, from, to);
-        feedbackUserWithReservation(reservation);
+        response.ifPresent(Main::bookFlight);
 
-        tryToLoopOrGoodbye(sc);
-    }
-
-    private static void greet() {
-        System.out.println("All right, Let's book a flight together! ");
-    }
-
-    private static String askForName(Scanner sc) {
-        System.out.print("Please enter the Passenger name: ");
-        return sc.nextLine();
-    }
-
-    private static String askForLastName(Scanner sc) {
-        System.out.print("Please enter the Passenger last name: ");
-        return sc.nextLine();
-    }
-
-    private static String askForDateOfBirth(Scanner sc) {
-        System.out.print("Please enter the Passenger date of birth (format: yyyy-mm-dd): ");
-        return sc.nextLine();
-    }
-
-    private static String askForPassportId(Scanner sc) {
-        System.out.print("Please enter the Passenger passport ID: ");
-        return sc.nextLine();
-    }
-
-    private static boolean askForFirstClass(Scanner sc) {
-        System.out.print("Is this passenger a First Class Passenger (Y/N): ");
-        return sc.nextLine().equals("Y");
-    }
-
-    private static String askDepartureCity(Scanner sc) {
-        System.out.print("Please enter the Departure city: ");
-        return sc.nextLine();
-    }
-
-    private static String askForArrivalCity(Scanner sc) {
-        System.out.print("Please enter the Arrival city: ");
-        return sc.nextLine();
-    }
-
-    private static Reservation businessLogic(String name, String lastName, String passportId, String dateOfBirth, boolean isFirstClass, String from, String to) {
-        LocalDate date = LocalDate.parse(dateOfBirth);
-        Instant instant = date.atStartOfDay(ZoneId.of("UTC")).toInstant();
-        Passenger passenger = new Passenger.PassengerBuilder(name, lastName, passportId)
-                .dateOfBirth(instant).build();
-
-        Flight flight = new FlightFactoryImpl().create(FlightType.INTERNATIONAL, new CityFactoryImpl().create(from), new CityFactoryImpl().create(to), new AirplaneFactoryImpl().create("747", null, AirplaneType.LARGE), Instant.now(), Instant.now());
-        Seat seat = new SeatFactoryImpl().create("A1", isFirstClass ? SeatType.FIRST_CLASS : SeatType.REGULAR, passenger);
-        return new AirlineReservatorFactoryImpl().create().bookFlight(flight, seat, passenger,
-                flight.getFrom(), flight.getTo());
-    }
-
-    private static void feedbackUserWithReservation(Reservation reservation) {
-        System.out.println("Your Reservation is:");
-        System.out.println(reservation);
-        System.out.print("And the price for your Ticket is: ");
-        System.out.println(reservation.getTickerPrice());
-    }
-
-    private static void tryToLoopOrGoodbye(Scanner sc) {
-        System.out.print("Another Passenger (Y/N) : ");
-        String var= sc.nextLine();
-        if(var.equalsIgnoreCase("Y")){
+        if(view.needsLoopOrGoodBye()) {
             main(null);
-        } else {
-            System.out.println("Bon voyage!");
         }
+
+    }
+
+    private static void initializeSpring(String [] args) {
+        if (args != null) {
+            SpringApplication.run(Main.class, args);
+        }
+    }
+
+    private static void bookFlight(PresenterResponse response) {
+        Flight flight = new FlightFactoryImpl().create(FlightType.INTERNATIONAL, response.getFrom(), response.getTo(), new
+                AirplaneFactoryImpl().create("747", null, AirplaneType.LARGE), Instant.now(), Instant.now());
+        Seat seat = new SeatFactoryImpl().create("A1", response.isFirstClass() ? SeatType.FIRST_CLASS : SeatType.REGULAR,
+                response.getPassenger());
+        Optional<Reservation> reservation =  new ReservationController(response, new AirlineReservatorFactoryImpl()
+                .create())
+                .bookFlight(flight, seat);
+        reservation.ifPresent(View::feedbackUserWithReservation);
     }
 }

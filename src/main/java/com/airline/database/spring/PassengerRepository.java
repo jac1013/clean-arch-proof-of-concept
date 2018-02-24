@@ -1,4 +1,4 @@
-package com.airline.database;
+package com.airline.database.spring;
 
 import org.springframework.data.repository.CrudRepository;
 

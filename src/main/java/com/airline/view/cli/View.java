@@ -4,7 +4,7 @@ import org.apache.commons.cli.*;
 
 import java.util.Optional;
 
-class Presenter {
+class View {
 
     private static final String NAME_LONG = "name";
     private static final String NAME_SHORT = "n";
@@ -23,7 +23,7 @@ class Presenter {
     private static final String CLI_NAME = "airline-booker";
     private final String[] arguments;
 
-    Presenter(String[] arguments) {
+    View(String[] arguments) {
         this.arguments = arguments;
     }
 
@@ -51,7 +51,8 @@ class Presenter {
         try {
             CommandLineParser parser = new DefaultParser();
             CommandLine line = parser.parse(createCLIOptions(), arguments);
-            request = new PresenterRequest.CLIPresenterRequestBuilder(line.getOptionValue(NAME_LONG), line.getOptionValue(LAST_NAME_LONG), line.getOptionValue(PASSPORT_ID_LONG))
+            request = new PresenterRequest.PresenterRequestBuilder(line.getOptionValue(NAME_LONG), line.getOptionValue(LAST_NAME_LONG),
+                    line.getOptionValue(PASSPORT_ID_LONG))
                     .dateOfBirth(line.getOptionValue(DATE_OF_BIRTH_LONG))
                     .isFirstClass(line.getOptionValue(FIRST_CLASS_LONG))
                     .departureCity(line.getOptionValue(DEPARTURE_DATE_LONG))

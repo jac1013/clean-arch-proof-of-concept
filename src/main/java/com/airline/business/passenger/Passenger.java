@@ -47,6 +47,10 @@ public abstract class Passenger implements BusinessDatabase<Passenger> {
         return passengerType;
     }
 
+    public void setDatabase(Database<Passenger> database) {
+        this.database = database;
+    }
+
     @Override
     public String toString() {
         return "Passenger{" +
@@ -57,6 +61,26 @@ public abstract class Passenger implements BusinessDatabase<Passenger> {
                 ", gender=" + gender +
                 ", needsSpecialTreatment=" + needsSpecialTreatment +
                 '}';
+    }
+
+    @Override
+    public Passenger save() {
+        return this.database.save(this);
+    }
+
+    @Override
+    public Passenger update() {
+        return this.database.update(this);
+    }
+
+    @Override
+    public boolean delete(String id) {
+        return this.database.delete(id);
+    }
+
+    @Override
+    public Passenger find(String id) {
+        return this.database.find(id);
     }
 
     public static class PassengerBuilder {
@@ -100,7 +124,7 @@ public abstract class Passenger implements BusinessDatabase<Passenger> {
             return this;
         }
 
-        public Passenger build() {
+        Passenger build() {
             switch (passengerType) {
                 case STANDARD:
                 default:

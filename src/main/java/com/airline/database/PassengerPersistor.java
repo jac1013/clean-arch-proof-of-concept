@@ -2,33 +2,37 @@ package com.airline.database;
 
 import com.airline.business.database.Database;
 import com.airline.business.passenger.Passenger;
+import com.airline.business.passenger.PassengerFactoryImpl;
+import com.airline.database.spring.DatabasePassenger;
+import com.airline.database.spring.PassengerDatabaseTransformer;
+import com.airline.database.spring.PassengerRepository;
 
 
 public class PassengerPersistor implements Database<Passenger> {
     private final PassengerRepository passengerRepository;
+    private final PassengerDatabaseTransformer transformer;
 
-    public PassengerPersistor(PassengerRepository passengerRepository) {
+    public PassengerPersistor(PassengerRepository passengerRepository, PassengerDatabaseTransformer transformer) {
         this.passengerRepository = passengerRepository;
+        this.transformer = transformer;
     }
 
     @Override
-    public Passenger save(Passenger o) {
-        DatabasePassenger p = new DatabasePassenger();
-        p.setName(o.getName());
-        p.setLastName(o.getLastName());
-        p.setPassportId(o.getPassportId());
-        p.setNeedsSpecialTreatment(o.isNeedsSpecialTreatment());
-        p.setGender(o.getGender());
+    public Passenger save(Passenger passenger) {
+        DatabasePassenger databasePassenger = transformer.transform(passenger);
+        DatabasePassenger saved =  passengerRepository.save(databasePassenger);
 
-        DatabasePassenger saved =  passengerRepository.save(p);
-
-        return new Passenger.PassengerBuilder(saved.getName(), saved.getLastName(), saved.getPassportId())
-                .needsSpecialTreatment(saved.isNeedsSpecialTreatment()).gender(saved.getGender())
-                .build();
+        return new PassengerFactoryImpl(this).create( new Passenger.PassengerBuilder(saved.getName(), saved
+                .getLastName(), saved
+                .getPassportId())
+                .needsSpecialTreatment(saved.isNeedsSpecialTreatment())
+                .gender(saved.getGender())
+                .dateOfBirth(saved.getDateOfBirth())
+                .type(saved.getPassengerType()));
     }
 
     @Override
-    public Passenger update(Passenger o) {
+    public Passenger update(Passenger passenger) {
         return null;
     }
 

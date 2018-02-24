@@ -9,19 +9,19 @@ public abstract class PresenterResponse {
     protected City arrivalCity;
     protected boolean isFirstClass;
 
-    protected Passenger getPassenger() {
+    public Passenger getPassenger() {
         return passenger;
     }
 
-    City getFrom() {
+    public City getFrom() {
         return departureCity;
     }
 
-    City getTo() {
+    public City getTo() {
         return arrivalCity;
     }
 
-    boolean isFirstClass() {
+    public boolean isFirstClass() {
         return isFirstClass;
     }
 }
