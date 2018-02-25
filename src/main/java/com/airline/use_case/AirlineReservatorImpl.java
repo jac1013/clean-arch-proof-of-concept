@@ -33,10 +33,11 @@ public class AirlineReservatorImpl implements AirlineReservator {
 
     @Override
     public Reservation bookFlight(Flight flight, Seat seat, Passenger passenger, City from, City to) {
-//        // This is because for now flight and seat are just hard coded generated. The controller doesn't provide
+//        // This is because for now flight and seat are just hard coded. The controller doesn't provide
 //        // this info because the presenter doesn't.
 //        Flight flight1 = flightFactory.create(FlightType.INTERNATIONAL, from, to, airplaneFactory.create("747", null, AirplaneType.LARGE), Instant.now(), Instant.now());
 //        Seat seat1 = seatFactory.create("A1", passenger.isVIP() ? SeatType.FIRST_CLASS : SeatType.REGULAR, passenger);
+        passenger.save();
         return reservationFactory.create(flight, seat, passenger, TimeHelper.getTimeAfterHours(48), ReservationType
                 .ONLINE);
     }

@@ -27,9 +27,9 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import java.time.Instant;
 
 @SpringBootApplication()
-@ComponentScan("com.airline.database")
-@EntityScan("com.airline.database")
-@EnableJpaRepositories("com.airline.database")
+@ComponentScan("com.airline.database.spring")
+@EntityScan("com.airline.database.spring")
+@EnableJpaRepositories("com.airline.database.spring")
 public class Main {
     public static void main(String[] args) {
         SpringApplication.run(Main.class, args);

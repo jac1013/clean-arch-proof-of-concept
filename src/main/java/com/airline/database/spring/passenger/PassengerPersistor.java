@@ -1,16 +1,13 @@
-package com.airline.database;
+package com.airline.database.spring.passenger;
 
-import com.airline.business.database.Database;
 import com.airline.business.passenger.Passenger;
 import com.airline.business.passenger.PassengerFactoryImpl;
-import com.airline.database.spring.DatabasePassenger;
-import com.airline.database.spring.PassengerDatabaseTransformer;
-import com.airline.database.spring.PassengerRepository;
+import com.airline.database.passenger.PassengerDatabase;
+import com.airline.database.passenger.PassengerDatabaseTransformer;
 
-
-public class PassengerPersistor implements Database<Passenger> {
+public class PassengerPersistor implements PassengerDatabase {
     private final PassengerRepository passengerRepository;
-    private final PassengerDatabaseTransformer transformer;
+    private final PassengerDatabaseTransformer<PassengerEntity> transformer;
 
     public PassengerPersistor(PassengerRepository passengerRepository, PassengerDatabaseTransformer transformer) {
         this.passengerRepository = passengerRepository;
@@ -19,8 +16,8 @@ public class PassengerPersistor implements Database<Passenger> {
 
     @Override
     public Passenger save(Passenger passenger) {
-        DatabasePassenger databasePassenger = transformer.transform(passenger);
-        DatabasePassenger saved =  passengerRepository.save(databasePassenger);
+        PassengerEntity passengerEntity = transformer.transform(passenger);
+        PassengerEntity saved =  passengerRepository.save(passengerEntity);
 
         return new PassengerFactoryImpl(this).create( new Passenger.PassengerBuilder(saved.getName(), saved
                 .getLastName(), saved

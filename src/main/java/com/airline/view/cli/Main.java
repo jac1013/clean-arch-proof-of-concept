@@ -12,7 +12,6 @@ import com.airline.business.seat.Seat;
 import com.airline.business.seat.SeatFactoryImpl;
 import com.airline.business.seat.SeatType;
 import com.airline.database.spring.DatabaseFactoryImpl;
-import com.airline.main.SpringConfig;
 import com.airline.reservation.controller.PresenterResponse;
 import com.airline.reservation.controller.ReservationController;
 import com.airline.use_case.AirlineReservatorFactoryImpl;
@@ -22,7 +21,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Import;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 import java.time.Instant;
@@ -30,10 +28,9 @@ import java.util.Optional;
 
 // EXAMPLE: -n "John" -d "2018-01-30" -l "Doe" p "12345678" -dc "New York" -ac "Tokyo" -sf "false"
 @SpringBootApplication
-@Import({SpringConfig.class})
-@ComponentScan("com.airline.database")
-@EntityScan("com.airline.database")
-@EnableJpaRepositories("com.airline.database")
+@ComponentScan("com.airline.database.spring")
+@EntityScan("com.airline.database.spring")
+@EnableJpaRepositories("com.airline.database.spring")
 public class Main {
     public static void main(String[] args) {
         SpringApplication.run(Main.class, args);

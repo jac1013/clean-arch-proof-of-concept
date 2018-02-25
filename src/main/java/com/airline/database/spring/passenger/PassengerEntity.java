@@ -1,14 +1,15 @@
-package com.airline.database.spring;
+package com.airline.database.spring.passenger;
 
 import com.airline.business.passenger.Gender;
 import com.airline.business.passenger.PassengerType;
+import com.airline.database.passenger.PassengerSchema;
 
 import javax.persistence.*;
 import java.time.Instant;
 
 @Entity
 @Table(name="passenger")
-public class DatabasePassenger {
+public class PassengerEntity implements PassengerSchema {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Long id;
@@ -27,7 +28,7 @@ public class DatabasePassenger {
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
-    DatabasePassenger() {
+    PassengerEntity() {
     }
 
     public Long getId() {
