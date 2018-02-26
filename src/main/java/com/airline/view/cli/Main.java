@@ -3,6 +3,7 @@ package com.airline.view.cli;
 import com.airline.business.airplane.AirplaneFactoryImpl;
 import com.airline.business.airplane.AirplaneType;
 import com.airline.business.city.CityFactoryImpl;
+import com.airline.business.passenger.database.PassengerDatabase;
 import com.airline.business.flight.Flight;
 import com.airline.business.flight.FlightFactoryImpl;
 import com.airline.business.flight.FlightType;
@@ -11,7 +12,7 @@ import com.airline.business.reservation.Reservation;
 import com.airline.business.seat.Seat;
 import com.airline.business.seat.SeatFactoryImpl;
 import com.airline.business.seat.SeatType;
-import com.airline.database.spring.DatabaseFactoryImpl;
+import com.airline.spring.database.DatabaseFactoryImpl;
 import com.airline.reservation.controller.PresenterResponse;
 import com.airline.reservation.controller.ReservationController;
 import com.airline.use_case.AirlineReservatorFactoryImpl;
@@ -28,9 +29,9 @@ import java.util.Optional;
 
 // EXAMPLE: -n "John" -d "2018-01-30" -l "Doe" p "12345678" -dc "New York" -ac "Tokyo" -sf "false"
 @SpringBootApplication
-@ComponentScan("com.airline.database.spring")
-@EntityScan("com.airline.database.spring")
-@EnableJpaRepositories("com.airline.database.spring")
+@ComponentScan("com.airline.spring.database")
+@EntityScan("com.airline.spring.database")
+@EnableJpaRepositories("com.airline.spring.database")
 public class Main {
     public static void main(String[] args) {
         SpringApplication.run(Main.class, args);
@@ -45,17 +46,17 @@ public class Main {
             }
 
             Optional<PresenterResponse> response = new PresenterDataTransformer(request.get(),
-                    new CityFactoryImpl(), new PassengerFactoryImpl(databaseFactory.getPassengerDatabase()))
+                    new CityFactoryImpl(), new PassengerFactoryImpl())
                     .transform();
             if (!response.isPresent()) {
                 return;
             }
 
-            createReservation(response.get());
+            createReservation(response.get(), databaseFactory.getPassengerDatabase());
         };
     }
 
-    private static void createReservation(PresenterResponse response) {
+    private static void createReservation(PresenterResponse response, PassengerDatabase passengerDatabase) {
         Seat seat =  new SeatFactoryImpl().create("A1", SeatType.REGULAR, response.getPassenger());
         Flight flight = new FlightFactoryImpl().create(FlightType.INTERNATIONAL, new CityFactoryImpl().create("New York"), new CityFactoryImpl().create("Tokyo"), new AirplaneFactoryImpl().create("747", null, AirplaneType.LARGE), Instant.now(), Instant.now());
         Optional<Reservation> reservation = new ReservationController(response, new AirlineReservatorFactoryImpl()
@@ -64,7 +65,7 @@ public class Main {
         reservation.ifPresent(r -> {
             System.out.println(r);
             System.out.println(r.getTickerPrice());
-            response.getPassenger().save();
+            passengerDatabase.save(response.getPassenger());
         });
     }
 

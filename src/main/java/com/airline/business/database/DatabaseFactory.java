@@ -1,5 +1,5 @@
 package com.airline.business.database;
 
-public interface DatabaseFactory {
-    Database getPassengerDatabase();
+public interface DatabaseFactory<T> {
+     T getPassengerDatabase();
 }

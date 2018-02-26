@@ -14,7 +14,7 @@ import com.airline.business.reservation.Reservation;
 import com.airline.business.seat.Seat;
 import com.airline.business.seat.SeatFactoryImpl;
 import com.airline.business.seat.SeatType;
-import com.airline.database.spring.DatabaseFactoryImpl;
+import com.airline.spring.database.DatabaseFactoryImpl;
 import com.airline.use_case.AirlineReservatorFactoryImpl;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -27,9 +27,9 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import java.time.Instant;
 
 @SpringBootApplication()
-@ComponentScan("com.airline.database.spring")
-@EntityScan("com.airline.database.spring")
-@EnableJpaRepositories("com.airline.database.spring")
+@ComponentScan("com.airline.spring.database")
+@EntityScan("com.airline.spring.database")
+@EnableJpaRepositories("com.airline.spring.database")
 public class Main {
     public static void main(String[] args) {
         SpringApplication.run(Main.class, args);
@@ -38,7 +38,7 @@ public class Main {
     @Bean
     public CommandLineRunner demo(DatabaseFactoryImpl databaseFactory) {
         return (args) -> {
-            Passenger passenger = new PassengerFactoryImpl(databaseFactory.getPassengerDatabase()).create(new  Passenger
+            Passenger passenger = new PassengerFactoryImpl().create(new  Passenger
                     .PassengerBuilder("John", "Doe", "12345678").dateOfBirth(Instant
                     .now()).gender(Gender.FEMININE).type(PassengerType.STANDARD));
             Seat seat =  new SeatFactoryImpl().create("A1", SeatType.REGULAR, passenger);
@@ -58,7 +58,7 @@ public class Main {
 
             System.out.println(reservation1.getTickerPrice());
 
-            System.out.println(passenger.save());
+            System.out.println(databaseFactory.getPassengerDatabase().save(passenger));
 
         };
     }

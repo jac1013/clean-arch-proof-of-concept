@@ -1,34 +1,54 @@
-package com.airline.database.spring.passenger;
+package com.airline.spring.database.passenger;
 
 import com.airline.business.passenger.Gender;
 import com.airline.business.passenger.PassengerType;
-import com.airline.database.passenger.PassengerSchema;
+import com.airline.business.passenger.database.PassengerSchema;
+import com.airline.spring.database.InstantPersistenceConverter;
+
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.time.Instant;
 
-@Entity
+@Entity(name="Passenger")
 @Table(name="passenger")
 public class PassengerEntity implements PassengerSchema {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Long id;
+
+    @NotNull
     private String name;
+    @NotNull
     private String lastName;
+    @NotNull
     private String passportId;
 
     @Column(name="isSpecial")
     private boolean needsSpecialTreatment;
 
     @Column(name="type")
+    @Enumerated(EnumType.STRING)
     private PassengerType passengerType;
 
+    @Convert(converter = InstantPersistenceConverter.class)
     private Instant dateOfBirth;
 
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
-    PassengerEntity() {
+    @Override
+    public String toString() {
+        return "PassengerEntity{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", passportId='" + passportId + '\'' +
+                ", needsSpecialTreatment=" + needsSpecialTreatment +
+                ", passengerType=" + passengerType +
+                ", dateOfBirth=" + dateOfBirth +
+                ", gender=" + gender +
+                '}';
     }
 
     public Long getId() {
@@ -88,7 +108,7 @@ public class PassengerEntity implements PassengerSchema {
     }
 
     public Gender getGender() {
-        return gender;
+            return gender;
     }
 
     public void setGender(Gender gender) {

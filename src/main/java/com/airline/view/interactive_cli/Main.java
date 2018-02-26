@@ -11,7 +11,7 @@ import com.airline.business.reservation.Reservation;
 import com.airline.business.seat.Seat;
 import com.airline.business.seat.SeatFactoryImpl;
 import com.airline.business.seat.SeatType;
-import com.airline.database.spring.DatabaseFactoryImpl;
+import com.airline.spring.database.DatabaseFactoryImpl;
 import com.airline.reservation.controller.PresenterResponse;
 import com.airline.reservation.controller.ReservationController;
 import com.airline.use_case.AirlineReservatorFactoryImpl;
@@ -29,9 +29,9 @@ import java.time.Instant;
 import java.util.Optional;
 
 @SpringBootApplication
-@ComponentScan("com.airline.database.spring")
-@EntityScan("com.airline.database.spring")
-@EnableJpaRepositories("com.airline.database.spring")
+@ComponentScan("com.airline.spring.database")
+@EntityScan("com.airline.spring.database")
+@EnableJpaRepositories("com.airline.spring.database")
 public class Main implements CommandLineRunner {
 
     @Autowired
@@ -50,7 +50,6 @@ public class Main implements CommandLineRunner {
                 .create())
                 .bookFlight(flight, seat);
         reservation.ifPresent(View::feedbackUserWithReservation);
-        response.getPassenger().save();
     }
 
     @Override
@@ -58,9 +57,11 @@ public class Main implements CommandLineRunner {
         View view = new View();
         PresenterRequest request = view.askForInformation();
         Optional<PresenterResponse> response = new PresenterDataTransformer(request, new CityFactoryImpl(), new
-                PassengerFactoryImpl(databaseFactory.getPassengerDatabase())).transform();
+                PassengerFactoryImpl()).transform();
 
         response.ifPresent(Main::bookFlight);
+
+        response.ifPresent(r -> databaseFactory.getPassengerDatabase().save(r.getPassenger()));
 
         if(view.needsLoopOrGoodBye()) {
             run();

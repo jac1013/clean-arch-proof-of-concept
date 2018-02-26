@@ -2,6 +2,7 @@ package com.airline.business.passenger;
 
 class StandardPassenger extends Passenger {
     StandardPassenger(Passenger.PassengerBuilder builder) {
+        this.id = builder.id;
         this.name = builder.name;
         this.lastName = builder.lastName;
         this.passportId = builder.passportId;
@@ -9,6 +10,5 @@ class StandardPassenger extends Passenger {
         this.gender = builder.gender;
         this.needsSpecialTreatment = builder.needsSpecialTreatment;
         this.passengerType = builder.passengerType;
-        this.database = builder.database;
     }
 }

@@ -18,11 +18,16 @@ public class AirplaneFactoryImpl implements AirplaneFactory {
             case LARGE:
                 return new LargeAirplane(name, seats, new LargeAirplaneCostFactorCalculator());
             default:
-                return this.getMediumAirplane(name, seats);
+                throw new InvalidAirplaneType();
+
         }
     }
 
     private Airplane getMediumAirplane(String name, List<Seat> seats) {
         return new MediumAirplane(name, seats, new MediumAirplaneCostFactorCalculator());
+    }
+
+    public static class InvalidAirplaneType extends RuntimeException {
+
     }
 }

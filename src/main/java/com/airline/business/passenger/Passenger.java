@@ -1,11 +1,9 @@
 package com.airline.business.passenger;
 
-import com.airline.business.database.BusinessDatabase;
-import com.airline.business.database.Database;
-
 import java.time.Instant;
 
-public abstract class Passenger implements BusinessDatabase<Passenger> {
+public abstract class Passenger {
+    Long id;
     String name;
     String lastName;
     String passportId;
@@ -13,11 +11,6 @@ public abstract class Passenger implements BusinessDatabase<Passenger> {
     Gender gender;
     boolean needsSpecialTreatment;
     PassengerType passengerType;
-    Database<Passenger> database;
-
-    public boolean isVIP() {
-        return passengerType == PassengerType.VIP;
-    }
 
     public String getName() {
         return name;
@@ -47,8 +40,9 @@ public abstract class Passenger implements BusinessDatabase<Passenger> {
         return passengerType;
     }
 
-    public void setDatabase(Database<Passenger> database) {
-        this.database = database;
+
+    public Long getId() {
+        return id;
     }
 
     @Override
@@ -63,35 +57,15 @@ public abstract class Passenger implements BusinessDatabase<Passenger> {
                 '}';
     }
 
-    @Override
-    public Passenger save() {
-        return this.database.save(this);
-    }
-
-    @Override
-    public Passenger update() {
-        return this.database.update(this);
-    }
-
-    @Override
-    public boolean delete(String id) {
-        return this.database.delete(id);
-    }
-
-    @Override
-    public Passenger find(String id) {
-        return this.database.find(id);
-    }
-
     public static class PassengerBuilder {
         final String name;
         final String lastName;
         final String passportId;
+        Long id;
         Instant dateOfBirth;
         Gender gender;
         boolean needsSpecialTreatment;
         PassengerType passengerType = PassengerType.STANDARD;
-        Database<Passenger> database;
 
         public PassengerBuilder(String name, String lastName, String passportId) {
             this.name = name;
@@ -115,12 +89,14 @@ public abstract class Passenger implements BusinessDatabase<Passenger> {
         }
 
         public PassengerBuilder type(PassengerType passengerType) {
-            this.passengerType = passengerType;
+            if(passengerType != null) {
+                this.passengerType = passengerType;
+            }
             return this;
         }
 
-        public PassengerBuilder database(Database database) {
-            this.database = database;
+        public PassengerBuilder id(Long id) {
+            this.id = id;
             return this;
         }
 

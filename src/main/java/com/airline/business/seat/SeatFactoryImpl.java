@@ -17,11 +17,15 @@ public class SeatFactoryImpl implements SeatFactory {
             case SPECIAL_NEEDS:
                 return new SpecialNeedsSeat(code, passenger, SeatCostFactorCalculatorImpl.getInstance());
             default:
-                return this.getRegularSeat(code, passenger);
+                throw new InvalidSeatType();
         }
     }
 
     private Seat getRegularSeat(String code, Passenger passenger) {
         return new RegularSeat(code, passenger, SeatCostFactorCalculatorImpl.getInstance());
+    }
+
+    public static class InvalidSeatType extends RuntimeException {
+
     }
 }
