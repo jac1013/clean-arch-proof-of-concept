@@ -3,6 +3,7 @@ package com.airline.spring.rest.passenger;
 import com.airline.business.database.DatabaseFactory;
 import com.airline.business.passenger.Passenger;
 import com.airline.business.passenger.database.PassengerRepository;
+import com.airline.business.passenger.rest.PassengerRestTranslator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.TransactionSystemException;
@@ -18,7 +19,7 @@ import java.util.stream.Stream;
 public class PassengerController {
 
     private PassengerRepository repository;
-    private com.airline.business.passenger.rest.PassengerRestTranslator translator;
+    private PassengerRestTranslator<PassengerRest> translator;
 
     @Autowired
     public PassengerController(DatabaseFactory<PassengerRepository> repositoryFactory, PassengerRestTranslatorImpl translator) {
@@ -50,15 +51,15 @@ public class PassengerController {
     }
 
     @GetMapping("/passenger/{id}")
-    public ResponseEntity<Passenger> get(@PathVariable("id") long id) {
+    public ResponseEntity<PassengerRest> get(@PathVariable("id") long id) {
         Passenger passenger = this.repository.find(id);
-        return ResponseEntity.ok().body(passenger);
+        return ResponseEntity.ok().body(this.translator.translate(passenger));
     }
 
     @GetMapping("/passenger")
-    public ResponseEntity<List<Passenger>> list() {
+    public ResponseEntity<List<PassengerRest>> list() {
         Stream<Passenger> passengers = this.repository.findAll();
-        return ResponseEntity.ok().body(passengers.collect(Collectors.toList()));
+        return ResponseEntity.ok().body(passengers.map(this.translator::translate).collect(Collectors.toList()));
     }
 
     @PutMapping("/passenger/{id}")
