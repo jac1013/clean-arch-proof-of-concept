@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 public class PassengerDatabaseTranslator implements PassengerRepositoryTranslator<PassengerEntity> {
     private PassengerFactory passengerFactory;
 
-    public PassengerDatabaseTranslator(PassengerFactory passengerFactory) {
+    public void setPassengerFactory(PassengerFactory passengerFactory) {
         this.passengerFactory = passengerFactory;
     }
 

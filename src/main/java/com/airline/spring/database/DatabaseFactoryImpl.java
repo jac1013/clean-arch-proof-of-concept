@@ -21,6 +21,8 @@ public class DatabaseFactoryImpl implements DatabaseFactory<PassengerRepository>
 
     @Override
     public PassengerRepository getPassengerDatabase() {
-        return new PassengerPersistor(repository, new PassengerDatabaseTranslator(new PassengerFactoryImpl()));
+        PassengerDatabaseTranslator translator = new PassengerDatabaseTranslator();
+        translator.setPassengerFactory(new PassengerFactoryImpl());
+        return new PassengerPersistor(repository, translator);
     }
 }

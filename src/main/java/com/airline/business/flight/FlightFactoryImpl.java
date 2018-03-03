@@ -14,6 +14,7 @@ public class FlightFactoryImpl implements FlightFactory {
             case DOMESTIC:
                 return new DomesticFlight(from, to, airplane, departure, arrival, new DomesticFlightCostCalculator());
             case INTERNATIONAL:
+                return new InternationalFlight(from, to, airplane, departure, arrival, new DomesticFlightCostCalculator());
             default:
                 throw new InvalidFlightType();
 

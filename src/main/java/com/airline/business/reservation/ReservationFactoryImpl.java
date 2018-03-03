@@ -13,6 +13,7 @@ public class ReservationFactoryImpl implements ReservationFactory {
             case PHYSICAL:
                 return new PhysicalReservation(flight, seat , passenger, dueDate);
             case ONLINE:
+                return new OnlineReservation(flight, seat , passenger, dueDate);
             default:
                 throw new InvalidReservationType();
         }

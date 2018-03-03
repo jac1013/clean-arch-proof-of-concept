@@ -10,12 +10,8 @@ public class PassengerRestTranslatorImpl implements PassengerRestTranslator<Pass
 
     private static PassengerFactory passengerFactory;
 
-    public static void setPassengerFactory(PassengerFactory passengerFactory) {
+    static void setPassengerFactory(PassengerFactory passengerFactory) {
         PassengerRestTranslatorImpl.passengerFactory = passengerFactory;
-    }
-
-    public PassengerRestTranslatorImpl() {
-
     }
 
     @Override
