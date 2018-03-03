@@ -2,14 +2,14 @@ package com.airline.spring.database.passenger;
 
 import com.airline.business.passenger.Passenger;
 import com.airline.business.passenger.PassengerFactory;
-import com.airline.business.passenger.database.PassengerDatabaseTranslator;
+import com.airline.business.passenger.database.PassengerRepositoryTranslator;
 import org.springframework.stereotype.Service;
 
 @Service
-public class PassengerTranslator implements PassengerDatabaseTranslator<PassengerEntity> {
+public class PassengerDatabaseTranslator implements PassengerRepositoryTranslator<PassengerEntity> {
     private PassengerFactory passengerFactory;
 
-    public PassengerTranslator(PassengerFactory passengerFactory) {
+    public PassengerDatabaseTranslator(PassengerFactory passengerFactory) {
         this.passengerFactory = passengerFactory;
     }
 

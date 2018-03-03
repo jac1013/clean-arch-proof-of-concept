@@ -2,25 +2,25 @@ package com.airline.spring.database;
 
 import com.airline.business.database.DatabaseFactory;
 import com.airline.business.passenger.PassengerFactoryImpl;
-import com.airline.business.passenger.database.PassengerDatabase;
+import com.airline.business.passenger.database.PassengerRepository;
+import com.airline.spring.database.passenger.PassengerDatabase;
 import com.airline.spring.database.passenger.PassengerPersistor;
-import com.airline.spring.database.passenger.PassengerRepository;
-import com.airline.spring.database.passenger.PassengerTranslator;
+import com.airline.spring.database.passenger.PassengerDatabaseTranslator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class DatabaseFactoryImpl implements DatabaseFactory<PassengerDatabase> {
+public class DatabaseFactoryImpl implements DatabaseFactory<PassengerRepository> {
 
-    private PassengerRepository repository;
+    private PassengerDatabase repository;
 
     @Autowired
-    public DatabaseFactoryImpl(PassengerRepository repository) {
+    public DatabaseFactoryImpl(PassengerDatabase repository) {
         this.repository = repository;
     }
 
     @Override
-    public PassengerDatabase getPassengerDatabase() {
-        return new PassengerPersistor(repository, new PassengerTranslator(new PassengerFactoryImpl()));
+    public PassengerRepository getPassengerDatabase() {
+        return new PassengerPersistor(repository, new PassengerDatabaseTranslator(new PassengerFactoryImpl()));
     }
 }

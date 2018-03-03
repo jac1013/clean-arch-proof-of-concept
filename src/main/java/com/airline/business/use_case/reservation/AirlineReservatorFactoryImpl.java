@@ -1,4 +1,4 @@
-package com.airline.use_case;
+package com.airline.business.use_case.reservation;
 
 import com.airline.business.airplane.AirplaneFactoryImpl;
 import com.airline.business.flight.FlightFactoryImpl;

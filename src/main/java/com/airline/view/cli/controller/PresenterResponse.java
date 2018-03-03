@@ -1,4 +1,4 @@
-package com.airline.reservation.controller;
+package com.airline.view.cli.controller;
 
 import com.airline.business.city.City;
 import com.airline.business.passenger.Passenger;

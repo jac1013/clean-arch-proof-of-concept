@@ -4,7 +4,7 @@ import com.airline.business.city.City;
 import com.airline.business.city.CityFactory;
 import com.airline.business.passenger.Passenger;
 import com.airline.business.passenger.PassengerFactory;
-import com.airline.reservation.controller.PresenterResponse;
+import com.airline.view.cli.controller.PresenterResponse;
 
 import java.time.Instant;
 import java.time.LocalDate;

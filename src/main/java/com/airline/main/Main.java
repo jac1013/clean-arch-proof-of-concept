@@ -15,7 +15,7 @@ import com.airline.business.seat.Seat;
 import com.airline.business.seat.SeatFactoryImpl;
 import com.airline.business.seat.SeatType;
 import com.airline.spring.database.DatabaseFactoryImpl;
-import com.airline.use_case.AirlineReservatorFactoryImpl;
+import com.airline.business.use_case.reservation.AirlineReservatorFactoryImpl;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

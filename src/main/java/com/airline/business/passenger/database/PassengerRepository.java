@@ -5,6 +5,6 @@ import com.airline.business.passenger.Passenger;
 
 import java.util.stream.Stream;
 
-public interface PassengerDatabase extends Database<Passenger, Long> {
+public interface PassengerRepository extends Database<Passenger, Long> {
     Stream<Passenger> findAll();
 }

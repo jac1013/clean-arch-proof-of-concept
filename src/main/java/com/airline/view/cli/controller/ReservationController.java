@@ -1,9 +1,9 @@
-package com.airline.reservation.controller;
+package com.airline.view.cli.controller;
 
 import com.airline.business.flight.Flight;
 import com.airline.business.reservation.Reservation;
 import com.airline.business.seat.Seat;
-import com.airline.use_case.AirlineReservator;
+import com.airline.business.use_case.reservation.AirlineReservator;
 
 
 import java.util.Optional;

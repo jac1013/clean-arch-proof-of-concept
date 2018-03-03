@@ -3,7 +3,7 @@ package com.airline.view.cli;
 import com.airline.business.airplane.AirplaneFactoryImpl;
 import com.airline.business.airplane.AirplaneType;
 import com.airline.business.city.CityFactoryImpl;
-import com.airline.business.passenger.database.PassengerDatabase;
+import com.airline.business.passenger.database.PassengerRepository;
 import com.airline.business.flight.Flight;
 import com.airline.business.flight.FlightFactoryImpl;
 import com.airline.business.flight.FlightType;
@@ -13,9 +13,9 @@ import com.airline.business.seat.Seat;
 import com.airline.business.seat.SeatFactoryImpl;
 import com.airline.business.seat.SeatType;
 import com.airline.spring.database.DatabaseFactoryImpl;
-import com.airline.reservation.controller.PresenterResponse;
-import com.airline.reservation.controller.ReservationController;
-import com.airline.use_case.AirlineReservatorFactoryImpl;
+import com.airline.view.cli.controller.PresenterResponse;
+import com.airline.view.cli.controller.ReservationController;
+import com.airline.business.use_case.reservation.AirlineReservatorFactoryImpl;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -56,7 +56,7 @@ public class Main {
         };
     }
 
-    private static void createReservation(PresenterResponse response, PassengerDatabase passengerDatabase) {
+    private static void createReservation(PresenterResponse response, PassengerRepository passengerRepository) {
         Seat seat =  new SeatFactoryImpl().create("A1", SeatType.REGULAR, response.getPassenger());
         Flight flight = new FlightFactoryImpl().create(FlightType.INTERNATIONAL, new CityFactoryImpl().create("New York"), new CityFactoryImpl().create("Tokyo"), new AirplaneFactoryImpl().create("747", null, AirplaneType.LARGE), Instant.now(), Instant.now());
         Optional<Reservation> reservation = new ReservationController(response, new AirlineReservatorFactoryImpl()
@@ -65,7 +65,7 @@ public class Main {
         reservation.ifPresent(r -> {
             System.out.println(r);
             System.out.println(r.getTickerPrice());
-            passengerDatabase.save(response.getPassenger());
+            passengerRepository.save(response.getPassenger());
         });
     }
 

@@ -2,10 +2,7 @@ package com.airline.spring.rest.passenger;
 
 import com.airline.business.database.DatabaseFactory;
 import com.airline.business.passenger.Passenger;
-import com.airline.business.passenger.database.PassengerDatabase;
-import com.airline.business.passenger.database.PassengerDatabaseTranslator;
-import com.airline.spring.database.passenger.PassengerEntity;
-import com.airline.spring.database.passenger.PassengerTranslator;
+import com.airline.business.passenger.database.PassengerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.TransactionSystemException;
@@ -20,22 +17,22 @@ import java.util.stream.Stream;
 @RestController
 public class PassengerController {
 
-    private PassengerDatabase database;
-    private PassengerDatabaseTranslator<PassengerEntity> translator;
+    private PassengerRepository repository;
+    private com.airline.business.passenger.rest.PassengerRestTranslator translator;
 
     @Autowired
-    public PassengerController(DatabaseFactory<PassengerDatabase> databaseFactory, PassengerTranslator translator) {
-        this.database = databaseFactory.getPassengerDatabase();
+    public PassengerController(DatabaseFactory<PassengerRepository> repositoryFactory, PassengerRestTranslatorImpl translator) {
+        this.repository = repositoryFactory.getPassengerDatabase();
         this.translator = translator;
     }
 
     @PostMapping("/passenger")
-    public ResponseEntity<?> save(@RequestBody PassengerEntity passengerEntity) {
-        return this.catchValidationAndRespondAccordingly(passengerEntity, p -> this.database.save(p),
+    public ResponseEntity<?> save(@RequestBody PassengerRest passengerRest) {
+        return this.catchValidationAndRespondAccordingly(passengerRest, p -> this.repository.save(p),
                 "New Passenger was created with ID: ");
     }
 
-    private ResponseEntity<?> catchValidationAndRespondAccordingly(PassengerEntity p, Function<Passenger, Passenger>
+    private ResponseEntity<?> catchValidationAndRespondAccordingly(PassengerRest p, Function<Passenger, Passenger>
             operation, String message) {
         Passenger passenger = this.translator.translate(p);
         try {
@@ -54,26 +51,26 @@ public class PassengerController {
 
     @GetMapping("/passenger/{id}")
     public ResponseEntity<Passenger> get(@PathVariable("id") long id) {
-        Passenger passenger = this.database.find(id);
+        Passenger passenger = this.repository.find(id);
         return ResponseEntity.ok().body(passenger);
     }
 
     @GetMapping("/passenger")
     public ResponseEntity<List<Passenger>> list() {
-        Stream<Passenger> passengers = this.database.findAll();
+        Stream<Passenger> passengers = this.repository.findAll();
         return ResponseEntity.ok().body(passengers.collect(Collectors.toList()));
     }
 
     @PutMapping("/passenger/{id}")
-    public ResponseEntity<?> update(@PathVariable("id") long id, @RequestBody PassengerEntity passengerEntity) {
-        passengerEntity.setId(id);
-        return this.catchValidationAndRespondAccordingly(passengerEntity, p -> this.database.update(p),
+    public ResponseEntity<?> update(@PathVariable("id") long id, @RequestBody PassengerRest passengerRest) {
+        passengerRest.setId(id);
+        return this.catchValidationAndRespondAccordingly(passengerRest, p -> this.repository.update(p),
                 "Passenger has been updated successfully, ID: ");
     }
 
     @DeleteMapping("/passenger/{id}")
     public ResponseEntity<?> delete(@PathVariable("id") long id) {
-        this.database.delete(id);
+        this.repository.delete(id);
         return ResponseEntity.ok().body("Passenger has been deleted successfully.");
     }
 
